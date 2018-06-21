@@ -63,8 +63,8 @@
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 
-class database;
 class client;
+class database;
 
 ///
 /// Class representing server side document groupings within a MongoDB database.
