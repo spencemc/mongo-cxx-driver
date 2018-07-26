@@ -48,6 +48,9 @@ endif()
 add_subdirectory(config)
 
 set(mongocxx_sources
+    apm/command_failed_event.cpp
+    apm/command_started_event.cpp
+    apm/command_succeeded_event.cpp
     bulk_write.cpp
     client.cpp
     client_session.cpp
@@ -74,6 +77,7 @@ set(mongocxx_sources
     model/update_one.cpp
     model/write.cpp
     options/aggregate.cpp
+    options/apm.cpp
     options/bulk_write.cpp
     options/change_stream.cpp
     options/client.cpp

@@ -21,6 +21,7 @@
 #include <mongocxx/exception/operation_exception.hpp>
 #include <mongocxx/exception/private/error_category.hh>
 #include <mongocxx/exception/private/mongoc_error.hh>
+#include <mongocxx/options/private/apm.hh>
 #include <mongocxx/options/private/ssl.hh>
 #include <mongocxx/private/client.hh>
 #include <mongocxx/private/client_session.hh>
@@ -56,6 +57,17 @@ client::client(const class uri& uri, const options::client& options) {
     if (!new_client) {
         // Shouldn't happen after checks above, but future libmongoc's may change behavior.
         throw exception{error_code::k_invalid_parameter, "could not construct client from URI"};
+    }
+
+    if (options.apm_opts()) {
+        auto callbacks =
+            std::unique_ptr<mongoc_apm_callbacks_t, decltype(&mongoc_apm_callbacks_destroy)>(
+                options::apm_wrapper::make_apm_callbacks(*options.apm_opts()),
+                &mongoc_apm_callbacks_destroy);
+        mongoc_client_set_apm_callbacks(
+            new_client,
+            callbacks.get(),
+            static_cast<void*>(const_cast<options::apm*>(&(*options.apm_opts()))));
     }
 
     _impl = stdx::make_unique<impl>(std::move(new_client));
