@@ -1,4 +1,4 @@
-// Copyright 2014 MongoDB Inc.
+// Copyright 2018-present MongoDB Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,38 +12,24 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <mongocxx/options/client.hpp>
+#pragma once
+
+#include <mongocxx/private/libmongoc.hh>
 
 #include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
-namespace options {
+namespace apm {
 
-client& client::ssl_opts(ssl ssl_opts) {
-    _ssl_opts = std::move(ssl_opts);
-    return *this;
-}
+class command_failed_event::impl {
+   public:
+    impl(mongoc_apm_command_failed_t* failed_event) : failed_event_t(failed_event) {}
+    mongoc_apm_command_failed_t* failed_event_t;
+};
 
-const stdx::optional<ssl>& client::ssl_opts() const {
-    return _ssl_opts;
-}
-
-client& client::apm_opts(apm apm_opts) {
-    _apm_opts = std::move(apm_opts);
-    return *this;
-}
-
-const stdx::optional<apm>& client::apm_opts() const {
-    return _apm_opts;
-}
-
-bool MONGOCXX_CALL operator==(const client& lhs, const client& rhs) {
-    return lhs.ssl_opts() == rhs.ssl_opts();
-}
-bool MONGOCXX_CALL operator!=(const client& lhs, const client& rhs) {
-    return !(lhs == rhs);
-}
-}  // namespace options
+}  // namespace apm
 MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace mongocxx
+
+#include <mongocxx/config/private/postlude.hh>

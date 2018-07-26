@@ -20,6 +20,7 @@
 #include <mongocxx/client.hpp>
 #include <mongocxx/exception/error_code.hpp>
 #include <mongocxx/exception/exception.hpp>
+#include <mongocxx/options/private/apm.hh>
 #include <mongocxx/options/private/ssl.hh>
 #include <mongocxx/private/client.hh>
 #include <mongocxx/private/pool.hh>
@@ -55,6 +56,16 @@ pool::pool(const uri& uri, const options::pool& options)
     if (uri.ssl() || options.client_opts().ssl_opts())
         throw exception{error_code::k_ssl_not_supported};
 #endif
+    if (options.client_opts().apm_opts()) {
+        auto callbacks =
+            std::unique_ptr<mongoc_apm_callbacks_t, decltype(&mongoc_apm_callbacks_destroy)>(
+                options::apm_wrapper::make_apm_callbacks(*options.client_opts().apm_opts()),
+                &mongoc_apm_callbacks_destroy);
+        mongoc_client_pool_set_apm_callbacks(
+            _impl->client_pool_t,
+            callbacks.get(),
+            static_cast<void*>(const_cast<options::apm*>(&(*options.client_opts().apm_opts()))));
+    }
 }
 
 client* pool::entry::operator->() const& noexcept {
