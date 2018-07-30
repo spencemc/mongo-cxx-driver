@@ -65,10 +65,10 @@ client::client(const class uri& uri, const options::client& options) {
             std::unique_ptr<mongoc_apm_callbacks_t, decltype(&mongoc_apm_callbacks_destroy)>(
                 options::apm_wrapper::make_apm_callbacks(*options.apm_opts()),
                 &mongoc_apm_callbacks_destroy);
-        mongoc_client_set_apm_callbacks(
-            new_client,
-            callbacks.get(),
-            static_cast<void*>(const_cast<options::apm*>(&(*options.apm_opts()))));
+        // We cast the APM class to a void* so we can pass it into libmongoc's context.
+        // It will be cast back to an APM class in the event handlers.
+        auto context = static_cast<void*>(const_cast<options::apm*>(&(*options.apm_opts())));
+        mongoc_client_set_apm_callbacks(new_client, callbacks.get(), context);
     }
 
     _impl = stdx::make_unique<impl>(std::move(new_client));

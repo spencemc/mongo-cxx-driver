@@ -61,10 +61,11 @@ pool::pool(const uri& uri, const options::pool& options)
             std::unique_ptr<mongoc_apm_callbacks_t, decltype(&mongoc_apm_callbacks_destroy)>(
                 options::apm_wrapper::make_apm_callbacks(*options.client_opts().apm_opts()),
                 &mongoc_apm_callbacks_destroy);
-        mongoc_client_pool_set_apm_callbacks(
-            _impl->client_pool_t,
-            callbacks.get(),
-            static_cast<void*>(const_cast<options::apm*>(&(*options.client_opts().apm_opts()))));
+        // We cast the APM class to a void* so we can pass it into libmongoc's context.
+        // It will be cast back to an APM class in the event handlers.
+        auto context =
+            static_cast<void*>(const_cast<options::apm*>(&(*options.client_opts().apm_opts())));
+        mongoc_client_pool_set_apm_callbacks(_impl->client_pool_t, callbacks.get(), context);
     }
 }
 
