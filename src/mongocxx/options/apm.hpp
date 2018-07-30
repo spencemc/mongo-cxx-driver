@@ -14,6 +14,8 @@
 
 #pragma once
 
+#include <functional>
+
 #include <mongocxx/apm/command_failed_event.hpp>
 #include <mongocxx/apm/command_started_event.hpp>
 #include <mongocxx/apm/command_succeeded_event.hpp>

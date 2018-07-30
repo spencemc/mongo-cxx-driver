@@ -14,6 +14,8 @@
 
 #pragma once
 
+#include <memory>
+
 #include <bsoncxx/document/view.hpp>
 
 #include <mongocxx/config/prelude.hpp>
