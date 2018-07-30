@@ -24,8 +24,9 @@ namespace apm {
 
 class command_succeeded_event::impl {
    public:
-    impl(mongoc_apm_command_succeeded_t* succeeded_event) : succeeded_event_t(succeeded_event) {}
-    mongoc_apm_command_succeeded_t* succeeded_event_t;
+    impl(const mongoc_apm_command_succeeded_t* succeeded_event)
+        : succeeded_event_t(succeeded_event) {}
+    const mongoc_apm_command_succeeded_t* succeeded_event_t;
 };
 
 }  // namespace apm

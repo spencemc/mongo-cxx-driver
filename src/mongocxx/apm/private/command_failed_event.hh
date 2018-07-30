@@ -24,8 +24,8 @@ namespace apm {
 
 class command_failed_event::impl {
    public:
-    impl(mongoc_apm_command_failed_t* failed_event) : failed_event_t(failed_event) {}
-    mongoc_apm_command_failed_t* failed_event_t;
+    impl(const mongoc_apm_command_failed_t* failed_event) : failed_event_t(failed_event) {}
+    const mongoc_apm_command_failed_t* failed_event_t;
 };
 
 }  // namespace apm
