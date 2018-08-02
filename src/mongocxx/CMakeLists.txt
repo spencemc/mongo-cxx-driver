@@ -48,9 +48,6 @@ endif()
 add_subdirectory(config)
 
 set(mongocxx_sources
-    apm/command_failed_event.cpp
-    apm/command_started_event.cpp
-    apm/command_succeeded_event.cpp
     bulk_write.cpp
     client.cpp
     client_session.cpp
@@ -58,6 +55,9 @@ set(mongocxx_sources
     collection.cpp
     cursor.cpp
     database.cpp
+    events/command_failed_event.cpp
+    events/command_started_event.cpp
+    events/command_succeeded_event.cpp
     exception/error_code.cpp
     exception/operation_exception.cpp
     exception/server_error_code.cpp

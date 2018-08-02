@@ -27,72 +27,72 @@ namespace options {
 class MONGOCXX_PRIVATE apm_wrapper;
 }
 
-namespace apm {
+namespace events {
 
-class MONGOCXX_API command_succeeded_event {
+class MONGOCXX_API command_failed_event {
    public:
     ///
-    /// Destroys a command_succeeded_event.
+    /// Destroys a command_failed_event.
     ///
-    ~command_succeeded_event();
+    ~command_failed_event();
 
     ///
-    /// Returns the server reply for the succeeded operation.
+    /// Returns the server’s reply to the failed operation.
     ///
-    /// @return A document view containing the reply.
+    /// @return The failure.
     ///
-    bsoncxx::document::view reply() const;
+    bsoncxx::document::view failure() const;
 
     ///
     /// Returns the name of the command.
     ///
-    /// @return A string view with the command name.
+    /// @return The command name.
     ///
     bsoncxx::stdx::string_view command_name() const;
 
     ///
-    /// Returns the duration of the successful operation.
+    /// Returns the duration of the failed operation.
     ///
-    /// @return An int64_t with the duration in microseconds.
+    /// @return The duration in microseconds.
     ///
     std::int64_t duration() const;
 
     ///
     /// Returns the request id.
     ///
-    /// @return An int64_t with the request id.
+    /// @return The request id.
     ///
     std::int64_t request_id() const;
 
     ///
     /// Returns the operation id.
     ///
-    /// @return An int64_t with the operation id.
+    /// @return The operation id.
     ///
     std::int64_t operation_id() const;
 
     ///
     /// Returns the host name.
     ///
-    /// @return A string view with the host name.
+    /// @return The host name.
     ///
     bsoncxx::stdx::string_view host() const;
 
     ///
     /// Returns the port.
     ///
-    /// @return A uint16_t with the port.
+    /// @return The port.
     ///
     std::uint16_t port() const;
 
    private:
     friend class options::apm_wrapper;
     class MONGOCXX_PRIVATE impl;
-    MONGOCXX_PRIVATE explicit command_succeeded_event(const void* event);
+    MONGOCXX_PRIVATE explicit command_failed_event(const void* event);
     std::unique_ptr<impl> _impl;
 };
 
-}  // namespace apm
+}  // namespace events
 MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace mongocxx
 

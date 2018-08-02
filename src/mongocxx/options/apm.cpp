@@ -20,35 +20,37 @@ namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 namespace options {
 
-apm& apm::command_started(
-    std::function<void(const mongocxx::apm::command_started_event&)> command_started) {
+apm& apm::on_command_started(
+    std::function<void(const mongocxx::events::command_started_event&)> command_started) {
     _command_started = std::move(command_started);
     return *this;
 }
 
-std::function<void(const mongocxx::apm::command_started_event&)> apm::command_started() const {
+std::function<void(const mongocxx::events::command_started_event&)> apm::command_started() const {
     return _command_started;
 }
 
-apm& apm::command_failed(
-    std::function<void(const mongocxx::apm::command_failed_event&)> command_failed) {
+apm& apm::on_command_failed(
+    std::function<void(const mongocxx::events::command_failed_event&)> command_failed) {
     _command_failed = std::move(command_failed);
     return *this;
 }
 
-std::function<void(const mongocxx::apm::command_failed_event&)> apm::command_failed() const {
+std::function<void(const mongocxx::events::command_failed_event&)> apm::command_failed() const {
     return _command_failed;
 }
 
-apm& apm::command_succeeded(
-    std::function<void(const mongocxx::apm::command_succeeded_event&)> command_succeeded) {
+apm& apm::on_command_succeeded(
+    std::function<void(const mongocxx::events::command_succeeded_event&)> command_succeeded) {
     _command_succeeded = std::move(command_succeeded);
     return *this;
 }
 
-std::function<void(const mongocxx::apm::command_succeeded_event&)> apm::command_succeeded() const {
+std::function<void(const mongocxx::events::command_succeeded_event&)> apm::command_succeeded()
+    const {
     return _command_succeeded;
 }
+
 }  // namespace options
 MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace mongocxx

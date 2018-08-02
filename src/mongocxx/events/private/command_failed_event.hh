@@ -20,15 +20,15 @@
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
-namespace apm {
+namespace events {
 
-class command_started_event::impl {
+class command_failed_event::impl {
    public:
-    impl(const mongoc_apm_command_started_t* started_event) : started_event_t(started_event) {}
-    const mongoc_apm_command_started_t* started_event_t;
+    explicit impl(const mongoc_apm_command_failed_t* failed_event) : failed_event_t(failed_event) {}
+    const mongoc_apm_command_failed_t* failed_event_t;
 };
 
-}  // namespace apm
+}  // namespace events
 MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace mongocxx
 

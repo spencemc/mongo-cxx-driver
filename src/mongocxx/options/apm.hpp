@@ -16,9 +16,9 @@
 
 #include <functional>
 
-#include <mongocxx/apm/command_failed_event.hpp>
-#include <mongocxx/apm/command_started_event.hpp>
-#include <mongocxx/apm/command_succeeded_event.hpp>
+#include <mongocxx/events/command_failed_event.hpp>
+#include <mongocxx/events/command_started_event.hpp>
+#include <mongocxx/events/command_succeeded_event.hpp>
 
 #include <mongocxx/config/prelude.hpp>
 
@@ -38,15 +38,15 @@ class MONGOCXX_API apm {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    apm& command_started(
-        std::function<void(const mongocxx::apm::command_started_event&)> command_started);
+    apm& on_command_started(
+        std::function<void(const mongocxx::events::command_started_event&)> command_started);
 
     ///
     /// Retrieves the command started monitoring callback.
     ///
     /// @return The command started monitoring callback.
     ///
-    std::function<void(const mongocxx::apm::command_started_event&)> command_started() const;
+    std::function<void(const mongocxx::events::command_started_event&)> command_started() const;
 
     ///
     /// Set the command failed monitoring callback.
@@ -58,15 +58,15 @@ class MONGOCXX_API apm {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    apm& command_failed(
-        std::function<void(const mongocxx::apm::command_failed_event&)> command_failed);
+    apm& on_command_failed(
+        std::function<void(const mongocxx::events::command_failed_event&)> command_failed);
 
     ///
     /// Retrieves the command failed monitoring callback.
     ///
     /// @return The command failed monitoring callback.
     ///
-    std::function<void(const mongocxx::apm::command_failed_event&)> command_failed() const;
+    std::function<void(const mongocxx::events::command_failed_event&)> command_failed() const;
 
     ///
     /// Set the command succeeded monitoring callback.
@@ -78,21 +78,22 @@ class MONGOCXX_API apm {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    apm& command_succeeded(
-        std::function<void(const mongocxx::apm::command_succeeded_event&)> command_succeeded);
+    apm& on_command_succeeded(
+        std::function<void(const mongocxx::events::command_succeeded_event&)> command_succeeded);
 
     ///
     /// Retrieves the command succeeded monitoring callback.
     ///
     /// @return The command succeeded monitoring callback.
     ///
-    std::function<void(const mongocxx::apm::command_succeeded_event&)> command_succeeded() const;
+    std::function<void(const mongocxx::events::command_succeeded_event&)> command_succeeded() const;
 
    private:
-    std::function<void(const mongocxx::apm::command_started_event&)> _command_started;
-    std::function<void(const mongocxx::apm::command_failed_event&)> _command_failed;
-    std::function<void(const mongocxx::apm::command_succeeded_event&)> _command_succeeded;
+    std::function<void(const mongocxx::events::command_started_event&)> _command_started;
+    std::function<void(const mongocxx::events::command_failed_event&)> _command_failed;
+    std::function<void(const mongocxx::events::command_succeeded_event&)> _command_succeeded;
 };
+
 }  // namespace options
 MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace mongocxx

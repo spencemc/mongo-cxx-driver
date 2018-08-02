@@ -27,7 +27,7 @@ namespace options {
 class MONGOCXX_PRIVATE apm_wrapper;
 }
 
-namespace apm {
+namespace events {
 
 class MONGOCXX_API command_started_event {
    public:
@@ -39,49 +39,49 @@ class MONGOCXX_API command_started_event {
     ///
     /// Returns the command that has been started.
     ///
-    /// @return A document view containing the command.
+    /// @return The command.
     ///
     bsoncxx::document::view command() const;
 
     ///
     /// Returns the name of the database.
     ///
-    /// @return A string view with the database name.
+    /// @return The database name.
     ///
     bsoncxx::stdx::string_view database_name() const;
 
     ///
     /// Returns the name of the command.
     ///
-    /// @return A string view with the command name.
+    /// @return The command name.
     ///
     bsoncxx::stdx::string_view command_name() const;
 
     ///
     /// Returns the request id.
     ///
-    /// @return An int64_t with the request id.
+    /// @return The request id.
     ///
     std::int64_t request_id() const;
 
     ///
     /// Returns the operation id.
     ///
-    /// @return An int64_t with the operation id.
+    /// @return The operation id.
     ///
     std::int64_t operation_id() const;
 
     ///
     /// Returns the host name.
     ///
-    /// @return A string view with the host name.
+    /// @return The host name.
     ///
     bsoncxx::stdx::string_view host() const;
 
     ///
     /// Returns the port.
     ///
-    /// @return A uint16_t with the port.
+    /// @return The port.
     ///
     std::uint16_t port() const;
 
@@ -92,7 +92,7 @@ class MONGOCXX_API command_started_event {
     std::unique_ptr<impl> _impl;
 };
 
-}  // namespace apm
+}  // namespace events
 MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace mongocxx
 
