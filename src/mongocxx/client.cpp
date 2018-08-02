@@ -61,13 +61,14 @@ client::client(const class uri& uri, const options::client& options) {
     }
 
     if (options.apm_opts()) {
+        _listeners = *options.apm_opts();
         auto callbacks =
             std::unique_ptr<mongoc_apm_callbacks_t, decltype(&mongoc_apm_callbacks_destroy)>(
-                options::apm_wrapper::make_apm_callbacks(*options.apm_opts()),
+                options::apm_wrapper::make_apm_callbacks(_listeners),
                 &mongoc_apm_callbacks_destroy);
         // We cast the APM class to a void* so we can pass it into libmongoc's context.
         // It will be cast back to an APM class in the event handlers.
-        auto context = static_cast<void*>(const_cast<options::apm*>(&(*options.apm_opts())));
+        auto context = static_cast<void*>(const_cast<options::apm*>(&(_listeners)));
         mongoc_client_set_apm_callbacks(new_client, callbacks.get(), context);
     }
 

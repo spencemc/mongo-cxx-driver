@@ -295,6 +295,7 @@ class MONGOCXX_API client {
     MONGOCXX_PRIVATE const impl& _get_impl() const;
 
     std::unique_ptr<impl> _impl;
+    options::apm _listeners;
 };
 
 MONGOCXX_INLINE database client::operator[](bsoncxx::string::view_or_value name) const& {

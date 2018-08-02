@@ -26,20 +26,20 @@ namespace options {
 class apm_wrapper {
    public:
     static void command_started(const mongoc_apm_command_started_t* event) {
-        mongocxx::apm::command_started_event _event(static_cast<const void*>(event));
-        auto context = (apm*)mongoc_apm_command_started_get_context(event);
+        mongocxx::events::command_started_event _event(static_cast<const void*>(event));
+        auto context = static_cast<apm*>(mongoc_apm_command_started_get_context(event));
         context->command_started()(_event);
     }
 
     static void command_failed(const mongoc_apm_command_failed_t* event) {
-        mongocxx::apm::command_failed_event _event(static_cast<const void*>(event));
-        auto context = (apm*)mongoc_apm_command_failed_get_context(event);
+        mongocxx::events::command_failed_event _event(static_cast<const void*>(event));
+        auto context = static_cast<apm*>(mongoc_apm_command_failed_get_context(event));
         context->command_failed()(_event);
     }
 
     static void command_succeeded(const mongoc_apm_command_succeeded_t* event) {
-        mongocxx::apm::command_succeeded_event _event(static_cast<const void*>(event));
-        auto context = (apm*)mongoc_apm_command_succeeded_get_context(event);
+        mongocxx::events::command_succeeded_event _event(static_cast<const void*>(event));
+        auto context = static_cast<apm*>(mongoc_apm_command_succeeded_get_context(event));
         context->command_succeeded()(_event);
     }
 
@@ -61,6 +61,7 @@ class apm_wrapper {
         return callbacks;
     }
 };
+
 }  // namespace options
 MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace mongocxx
