@@ -15,7 +15,6 @@
 #include <mongocxx/events/command_failed_event.hpp>
 
 #include <bsoncxx/stdx/make_unique.hpp>
-#include <mongocxx/events/private/command_failed_event.hh>
 #include <mongocxx/private/libmongoc.hh>
 
 #include <mongocxx/config/private/prelude.hh>
@@ -24,39 +23,46 @@ namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 namespace events {
 
-command_failed_event::command_failed_event(const void* event)
-    : _impl(bsoncxx::stdx::make_unique<impl>(
-          static_cast<const mongoc_apm_command_failed_t*>(event))) {}
+command_failed_event::command_failed_event(const void* event) : failed_event(event) {}
 
 command_failed_event::~command_failed_event() = default;
 
 bsoncxx::document::view command_failed_event::failure() const {
-    auto failure = libmongoc::apm_command_failed_get_reply(_impl->failed_event);
+    auto failure = libmongoc::apm_command_failed_get_reply(
+        static_cast<const mongoc_apm_command_failed_t*>(failed_event));
     return {bson_get_data(failure), failure->len};
 }
 
 bsoncxx::stdx::string_view command_failed_event::command_name() const {
-    return libmongoc::apm_command_failed_get_command_name(_impl->failed_event);
+    return libmongoc::apm_command_failed_get_command_name(
+        static_cast<const mongoc_apm_command_failed_t*>(failed_event));
 }
 
 std::int64_t command_failed_event::duration() const {
-    return libmongoc::apm_command_failed_get_duration(_impl->failed_event);
+    return libmongoc::apm_command_failed_get_duration(
+        static_cast<const mongoc_apm_command_failed_t*>(failed_event));
 }
 
 std::int64_t command_failed_event::request_id() const {
-    return libmongoc::apm_command_failed_get_request_id(_impl->failed_event);
+    return libmongoc::apm_command_failed_get_request_id(
+        static_cast<const mongoc_apm_command_failed_t*>(failed_event));
 }
 
 std::int64_t command_failed_event::operation_id() const {
-    return libmongoc::apm_command_failed_get_operation_id(_impl->failed_event);
+    return libmongoc::apm_command_failed_get_operation_id(
+        static_cast<const mongoc_apm_command_failed_t*>(failed_event));
 }
 
 bsoncxx::stdx::string_view command_failed_event::host() const {
-    return libmongoc::apm_command_failed_get_host(_impl->failed_event)->host;
+    return libmongoc::apm_command_failed_get_host(
+               static_cast<const mongoc_apm_command_failed_t*>(failed_event))
+        ->host;
 }
 
 std::uint16_t command_failed_event::port() const {
-    return libmongoc::apm_command_failed_get_host(_impl->failed_event)->port;
+    return libmongoc::apm_command_failed_get_host(
+               static_cast<const mongoc_apm_command_failed_t*>(failed_event))
+        ->port;
 }
 
 }  // namespace events

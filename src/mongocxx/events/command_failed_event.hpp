@@ -89,7 +89,7 @@ class MONGOCXX_API command_failed_event {
     friend class options::apm_wrapper;
     class MONGOCXX_PRIVATE impl;
     MONGOCXX_PRIVATE explicit command_failed_event(const void* event);
-    std::unique_ptr<impl> _impl;
+    const void* failed_event;
 };
 
 }  // namespace events

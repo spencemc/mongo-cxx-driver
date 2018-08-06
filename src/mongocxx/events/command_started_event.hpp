@@ -89,7 +89,7 @@ class MONGOCXX_API command_started_event {
     friend class options::apm_wrapper;
     class MONGOCXX_PRIVATE impl;
     MONGOCXX_PRIVATE explicit command_started_event(const void* event);
-    std::unique_ptr<impl> _impl;
+    const void* started_event;
 };
 
 }  // namespace events
