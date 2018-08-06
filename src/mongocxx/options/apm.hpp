@@ -29,8 +29,8 @@ namespace options {
 class MONGOCXX_API apm {
    public:
     ///
-    /// Set the command started monitoring callback. The callback takes a reference to a command_started_event
-    /// which will only contain valid data for the duration of the callback.
+    /// Set the command started monitoring callback. The callback takes a reference to a
+    /// command_started_event which will only contain valid data for the duration of the callback.
     ///
     /// @param command_started
     ///   The command started monitoring callback.
@@ -51,8 +51,8 @@ class MONGOCXX_API apm {
         const;
 
     ///
-    /// Set the command failed monitoring callback. The callback takes a reference to a command_failed_event which
-    /// will only contain valid data for the duration of the callback.
+    /// Set the command failed monitoring callback. The callback takes a reference to a
+    /// command_failed_event which will only contain valid data for the duration of the callback.
     ///
     /// @param command_failed
     ///   The command failed monitoring callback.
@@ -73,8 +73,8 @@ class MONGOCXX_API apm {
         const;
 
     ///
-    /// Set the command succeeded monitoring callback. The callback takes a reference to a command_succeeded_event
-    /// which will only contain valid data for the duration of the callback.
+    /// Set the command succeeded monitoring callback. The callback takes a reference to a
+    /// command_succeeded_event which will only contain valid data for the duration of the callback.
     ///
     /// @param command_failed
     ///   The command succeeded monitoring callback.

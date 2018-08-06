@@ -24,8 +24,8 @@ MONGOCXX_INLINE_NAMESPACE_BEGIN
 namespace options {
 
 class apm_wrapper {
-
-  using unique_callbacks = std::unique_ptr<mongoc_apm_callbacks_t, decltype(libmongoc::apm_callbacks_destroy)>;
+    using unique_callbacks =
+        std::unique_ptr<mongoc_apm_callbacks_t, decltype(libmongoc::apm_callbacks_destroy)>;
 
    public:
     static void command_started(const mongoc_apm_command_started_t* event) {
