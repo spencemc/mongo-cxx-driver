@@ -57,15 +57,12 @@ pool::pool(const uri& uri, const options::pool& options)
         throw exception{error_code::k_ssl_not_supported};
 #endif
     if (options.client_opts().apm_opts()) {
-        _listeners = *options.client_opts().apm_opts();
-        auto callbacks =
-            std::unique_ptr<mongoc_apm_callbacks_t, decltype(&mongoc_apm_callbacks_destroy)>(
-                options::apm_wrapper::make_apm_callbacks(_listeners),
-                &mongoc_apm_callbacks_destroy);
+        _impl->listeners = *options.client_opts().apm_opts();
+        auto callbacks = options::apm_wrapper::make_apm_callbacks(_impl->listeners);
         // We cast the APM class to a void* so we can pass it into libmongoc's context.
         // It will be cast back to an APM class in the event handlers.
-        auto context = static_cast<void*>(&(_listeners));
-        mongoc_client_pool_set_apm_callbacks(_impl->client_pool_t, callbacks.get(), context);
+        auto context = static_cast<void*>(&(_impl->listeners));
+        libmongoc::client_pool_set_apm_callbacks(_impl->client_pool_t, callbacks.get(), context);
     }
 }
 
