@@ -114,7 +114,6 @@ class MONGOCXX_API pool {
 
     class MONGOCXX_PRIVATE impl;
     const std::unique_ptr<impl> _impl;
-    options::apm _listeners;
 };
 
 MONGOCXX_INLINE_NAMESPACE_END

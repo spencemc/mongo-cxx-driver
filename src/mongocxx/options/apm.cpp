@@ -26,7 +26,8 @@ apm& apm::on_command_started(
     return *this;
 }
 
-std::function<void(const mongocxx::events::command_started_event&)> apm::command_started() const {
+const std::function<void(const mongocxx::events::command_started_event&)>& apm::command_started()
+    const {
     return _command_started;
 }
 
@@ -36,7 +37,8 @@ apm& apm::on_command_failed(
     return *this;
 }
 
-std::function<void(const mongocxx::events::command_failed_event&)> apm::command_failed() const {
+const std::function<void(const mongocxx::events::command_failed_event&)>& apm::command_failed()
+    const {
     return _command_failed;
 }
 
@@ -46,8 +48,8 @@ apm& apm::on_command_succeeded(
     return *this;
 }
 
-std::function<void(const mongocxx::events::command_succeeded_event&)> apm::command_succeeded()
-    const {
+const std::function<void(const mongocxx::events::command_succeeded_event&)>&
+apm::command_succeeded() const {
     return _command_succeeded;
 }
 

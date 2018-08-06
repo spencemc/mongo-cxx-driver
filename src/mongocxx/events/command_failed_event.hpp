@@ -24,8 +24,8 @@ namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 
 namespace options {
-class MONGOCXX_PRIVATE apm_wrapper;
-}
+class apm_wrapper;
+}  // namespace options
 
 namespace events {
 

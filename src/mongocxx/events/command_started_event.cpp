@@ -25,37 +25,38 @@ MONGOCXX_INLINE_NAMESPACE_BEGIN
 namespace events {
 
 command_started_event::command_started_event(const void* event)
-    : _impl(bsoncxx::stdx::make_unique<impl>((mongoc_apm_command_started_t*)event)) {}
+    : _impl(bsoncxx::stdx::make_unique<impl>(
+          static_cast<const mongoc_apm_command_started_t*>(event))) {}
 
 command_started_event::~command_started_event() = default;
 
 bsoncxx::document::view command_started_event::command() const {
-    auto command = libmongoc::apm_command_started_get_command(_impl->started_event_t);
+    auto command = libmongoc::apm_command_started_get_command(_impl->started_event);
     return {bson_get_data(command), command->len};
 }
 
 bsoncxx::stdx::string_view command_started_event::database_name() const {
-    return libmongoc::apm_command_started_get_database_name(_impl->started_event_t);
+    return libmongoc::apm_command_started_get_database_name(_impl->started_event);
 }
 
 bsoncxx::stdx::string_view command_started_event::command_name() const {
-    return libmongoc::apm_command_started_get_command_name(_impl->started_event_t);
+    return libmongoc::apm_command_started_get_command_name(_impl->started_event);
 }
 
 std::int64_t command_started_event::request_id() const {
-    return libmongoc::apm_command_started_get_request_id(_impl->started_event_t);
+    return libmongoc::apm_command_started_get_request_id(_impl->started_event);
 }
 
 std::int64_t command_started_event::operation_id() const {
-    return libmongoc::apm_command_started_get_operation_id(_impl->started_event_t);
+    return libmongoc::apm_command_started_get_operation_id(_impl->started_event);
 }
 
 bsoncxx::stdx::string_view command_started_event::host() const {
-    return libmongoc::apm_command_started_get_host(_impl->started_event_t)->host;
+    return libmongoc::apm_command_started_get_host(_impl->started_event)->host;
 }
 
 std::uint16_t command_started_event::port() const {
-    return libmongoc::apm_command_started_get_host(_impl->started_event_t)->port;
+    return libmongoc::apm_command_started_get_host(_impl->started_event)->port;
 }
 
 }  // namespace events

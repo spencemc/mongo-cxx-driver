@@ -27,38 +27,40 @@ class apm_wrapper {
    public:
     static void command_started(const mongoc_apm_command_started_t* event) {
         mongocxx::events::command_started_event _event(static_cast<const void*>(event));
-        auto context = static_cast<apm*>(mongoc_apm_command_started_get_context(event));
+        auto context = static_cast<apm*>(libmongoc::apm_command_started_get_context(event));
         context->command_started()(_event);
     }
 
     static void command_failed(const mongoc_apm_command_failed_t* event) {
         mongocxx::events::command_failed_event _event(static_cast<const void*>(event));
-        auto context = static_cast<apm*>(mongoc_apm_command_failed_get_context(event));
+        auto context = static_cast<apm*>(libmongoc::apm_command_failed_get_context(event));
         context->command_failed()(_event);
     }
 
     static void command_succeeded(const mongoc_apm_command_succeeded_t* event) {
         mongocxx::events::command_succeeded_event _event(static_cast<const void*>(event));
-        auto context = static_cast<apm*>(mongoc_apm_command_succeeded_get_context(event));
+        auto context = static_cast<apm*>(libmongoc::apm_command_succeeded_get_context(event));
         context->command_succeeded()(_event);
     }
 
-    static mongoc_apm_callbacks_t* make_apm_callbacks(const apm& apm_opts) {
-        mongoc_apm_callbacks_t* callbacks = mongoc_apm_callbacks_new();
+    static std::unique_ptr<mongoc_apm_callbacks_t, decltype(libmongoc::apm_callbacks_destroy)>
+    make_apm_callbacks(const apm& apm_opts) {
+        mongoc_apm_callbacks_t* callbacks = libmongoc::apm_callbacks_new();
 
         if (apm_opts.command_started()) {
-            mongoc_apm_set_command_started_cb(callbacks, command_started);
+            libmongoc::apm_set_command_started_cb(callbacks, command_started);
         }
 
         if (apm_opts.command_failed()) {
-            mongoc_apm_set_command_failed_cb(callbacks, command_failed);
+            libmongoc::apm_set_command_failed_cb(callbacks, command_failed);
         }
 
         if (apm_opts.command_succeeded()) {
-            mongoc_apm_set_command_succeeded_cb(callbacks, command_succeeded);
+            libmongoc::apm_set_command_succeeded_cb(callbacks, command_succeeded);
         }
 
-        return callbacks;
+        return std::unique_ptr<mongoc_apm_callbacks_t, decltype(libmongoc::apm_callbacks_destroy)>(
+            callbacks, libmongoc::apm_callbacks_destroy);
     }
 };
 

@@ -25,37 +25,38 @@ MONGOCXX_INLINE_NAMESPACE_BEGIN
 namespace events {
 
 command_succeeded_event::command_succeeded_event(const void* event)
-    : _impl(bsoncxx::stdx::make_unique<impl>((mongoc_apm_command_succeeded_t*)event)) {}
+    : _impl(bsoncxx::stdx::make_unique<impl>(
+          static_cast<const mongoc_apm_command_succeeded_t*>(event))) {}
 
 command_succeeded_event::~command_succeeded_event() = default;
 
 bsoncxx::document::view command_succeeded_event::reply() const {
-    auto reply = libmongoc::apm_command_succeeded_get_reply(_impl->succeeded_event_t);
+    auto reply = libmongoc::apm_command_succeeded_get_reply(_impl->succeeded_event);
     return {bson_get_data(reply), reply->len};
 }
 
 bsoncxx::stdx::string_view command_succeeded_event::command_name() const {
-    return libmongoc::apm_command_succeeded_get_command_name(_impl->succeeded_event_t);
+    return libmongoc::apm_command_succeeded_get_command_name(_impl->succeeded_event);
 }
 
 std::int64_t command_succeeded_event::duration() const {
-    return libmongoc::apm_command_succeeded_get_duration(_impl->succeeded_event_t);
+    return libmongoc::apm_command_succeeded_get_duration(_impl->succeeded_event);
 }
 
 std::int64_t command_succeeded_event::request_id() const {
-    return libmongoc::apm_command_succeeded_get_request_id(_impl->succeeded_event_t);
+    return libmongoc::apm_command_succeeded_get_request_id(_impl->succeeded_event);
 }
 
 std::int64_t command_succeeded_event::operation_id() const {
-    return libmongoc::apm_command_succeeded_get_operation_id(_impl->succeeded_event_t);
+    return libmongoc::apm_command_succeeded_get_operation_id(_impl->succeeded_event);
 }
 
 bsoncxx::stdx::string_view command_succeeded_event::host() const {
-    return libmongoc::apm_command_succeeded_get_host(_impl->succeeded_event_t)->host;
+    return libmongoc::apm_command_succeeded_get_host(_impl->succeeded_event)->host;
 }
 
 std::uint16_t command_succeeded_event::port() const {
-    return libmongoc::apm_command_succeeded_get_host(_impl->succeeded_event_t)->port;
+    return libmongoc::apm_command_succeeded_get_host(_impl->succeeded_event)->port;
 }
 
 }  // namespace events

@@ -46,7 +46,8 @@ class MONGOCXX_API apm {
     ///
     /// @return The command started monitoring callback.
     ///
-    std::function<void(const mongocxx::events::command_started_event&)> command_started() const;
+    const std::function<void(const mongocxx::events::command_started_event&)>& command_started()
+        const;
 
     ///
     /// Set the command failed monitoring callback.
@@ -66,7 +67,8 @@ class MONGOCXX_API apm {
     ///
     /// @return The command failed monitoring callback.
     ///
-    std::function<void(const mongocxx::events::command_failed_event&)> command_failed() const;
+    const std::function<void(const mongocxx::events::command_failed_event&)>& command_failed()
+        const;
 
     ///
     /// Set the command succeeded monitoring callback.
@@ -86,7 +88,8 @@ class MONGOCXX_API apm {
     ///
     /// @return The command succeeded monitoring callback.
     ///
-    std::function<void(const mongocxx::events::command_succeeded_event&)> command_succeeded() const;
+    const std::function<void(const mongocxx::events::command_succeeded_event&)>& command_succeeded()
+        const;
 
    private:
     std::function<void(const mongocxx::events::command_started_event&)> _command_started;

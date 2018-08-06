@@ -25,8 +25,8 @@ namespace events {
 class command_succeeded_event::impl {
    public:
     explicit impl(const mongoc_apm_command_succeeded_t* succeeded_event)
-        : succeeded_event_t(succeeded_event) {}
-    const mongoc_apm_command_succeeded_t* succeeded_event_t;
+        : succeeded_event(succeeded_event) {}
+    const mongoc_apm_command_succeeded_t* succeeded_event;
 };
 
 }  // namespace events
