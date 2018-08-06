@@ -23,6 +23,8 @@ namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 namespace options {
 
+using unique_mongoc_apm_callbacks = std::unique_ptr<mongoc_apm_callbacks_t, decltype(libmongoc::apm_callbacks_destroy)>;
+
 class apm_wrapper {
    public:
     static void command_started(const mongoc_apm_command_started_t* event) {
@@ -43,8 +45,7 @@ class apm_wrapper {
         context->command_succeeded()(_event);
     }
 
-    static std::unique_ptr<mongoc_apm_callbacks_t, decltype(libmongoc::apm_callbacks_destroy)>
-    make_apm_callbacks(const apm& apm_opts) {
+    static unique_mongoc_apm_callbacks make_apm_callbacks(const apm& apm_opts) {
         mongoc_apm_callbacks_t* callbacks = libmongoc::apm_callbacks_new();
 
         if (apm_opts.command_started()) {
@@ -59,8 +60,7 @@ class apm_wrapper {
             libmongoc::apm_set_command_succeeded_cb(callbacks, command_succeeded);
         }
 
-        return std::unique_ptr<mongoc_apm_callbacks_t, decltype(libmongoc::apm_callbacks_destroy)>(
-            callbacks, libmongoc::apm_callbacks_destroy);
+        return unique_mongoc_apm_callbacks(callbacks, libmongoc::apm_callbacks_destroy);
     }
 };
 
