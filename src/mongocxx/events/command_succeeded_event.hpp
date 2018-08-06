@@ -87,9 +87,8 @@ class MONGOCXX_API command_succeeded_event {
 
    private:
     friend class options::apm_wrapper;
-    class MONGOCXX_PRIVATE impl;
     MONGOCXX_PRIVATE explicit command_succeeded_event(const void* event);
-    const void* succeeded_event;
+    const void* _succeeded_event;
 };
 
 }  // namespace events

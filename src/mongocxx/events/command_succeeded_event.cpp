@@ -23,45 +23,45 @@ namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 namespace events {
 
-command_succeeded_event::command_succeeded_event(const void* event) : succeeded_event(event) {}
+command_succeeded_event::command_succeeded_event(const void* event) : _succeeded_event(event) {}
 
 command_succeeded_event::~command_succeeded_event() = default;
 
 bsoncxx::document::view command_succeeded_event::reply() const {
     auto reply = libmongoc::apm_command_succeeded_get_reply(
-        static_cast<const mongoc_apm_command_succeeded_t*>(succeeded_event));
+        static_cast<const mongoc_apm_command_succeeded_t*>(_succeeded_event));
     return {bson_get_data(reply), reply->len};
 }
 
 bsoncxx::stdx::string_view command_succeeded_event::command_name() const {
     return libmongoc::apm_command_succeeded_get_command_name(
-        static_cast<const mongoc_apm_command_succeeded_t*>(succeeded_event));
+        static_cast<const mongoc_apm_command_succeeded_t*>(_succeeded_event));
 }
 
 std::int64_t command_succeeded_event::duration() const {
     return libmongoc::apm_command_succeeded_get_duration(
-        static_cast<const mongoc_apm_command_succeeded_t*>(succeeded_event));
+        static_cast<const mongoc_apm_command_succeeded_t*>(_succeeded_event));
 }
 
 std::int64_t command_succeeded_event::request_id() const {
     return libmongoc::apm_command_succeeded_get_request_id(
-        static_cast<const mongoc_apm_command_succeeded_t*>(succeeded_event));
+        static_cast<const mongoc_apm_command_succeeded_t*>(_succeeded_event));
 }
 
 std::int64_t command_succeeded_event::operation_id() const {
     return libmongoc::apm_command_succeeded_get_operation_id(
-        static_cast<const mongoc_apm_command_succeeded_t*>(succeeded_event));
+        static_cast<const mongoc_apm_command_succeeded_t*>(_succeeded_event));
 }
 
 bsoncxx::stdx::string_view command_succeeded_event::host() const {
     return libmongoc::apm_command_succeeded_get_host(
-               static_cast<const mongoc_apm_command_succeeded_t*>(succeeded_event))
+               static_cast<const mongoc_apm_command_succeeded_t*>(_succeeded_event))
         ->host;
 }
 
 std::uint16_t command_succeeded_event::port() const {
     return libmongoc::apm_command_succeeded_get_host(
-               static_cast<const mongoc_apm_command_succeeded_t*>(succeeded_event))
+               static_cast<const mongoc_apm_command_succeeded_t*>(_succeeded_event))
         ->port;
 }
 
