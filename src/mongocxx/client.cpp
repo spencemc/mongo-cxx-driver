@@ -64,7 +64,7 @@ client::client(const class uri& uri, const options::client& options) {
 
     if (options.apm_opts()) {
         _impl->listeners = *options.apm_opts();
-        auto callbacks = options::apm_wrapper::make_apm_callbacks(_impl->listeners);
+        auto callbacks = options::make_apm_callbacks(_impl->listeners);
         // We cast the APM class to a void* so we can pass it into libmongoc's context.
         // It will be cast back to an APM class in the event handlers.
         auto context = static_cast<void*>(&(_impl->listeners));

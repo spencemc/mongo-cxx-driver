@@ -23,14 +23,12 @@
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 
-namespace options {
-class apm_wrapper;
-}  // namespace options
-
 namespace events {
 
 class MONGOCXX_API command_started_event {
    public:
+    MONGOCXX_PRIVATE explicit command_started_event(const void* event);
+
     ///
     /// Destroys a command_started_event.
     ///
@@ -86,8 +84,6 @@ class MONGOCXX_API command_started_event {
     std::uint16_t port() const;
 
    private:
-    friend class options::apm_wrapper;
-    MONGOCXX_PRIVATE explicit command_started_event(const void* event);
     const void* _started_event;
 };
 
