@@ -25,6 +25,7 @@
 #include <mongocxx/instance.hpp>
 #include <mongocxx/private/libmongoc.hh>
 #include <mongocxx/test_util/client_helpers.hh>
+#include <mongocxx/private/libbson.hh>
 
 namespace {
 using bsoncxx::from_json;
@@ -228,16 +229,38 @@ TEST_CASE("session", "[session]") {
 
 // Receive command-started events from libmongoc's APM to test session ids.
 // TODO: Port to C++ Driver's APM once it's implemented, CXX-1562.
-void command_started(const mongoc_apm_command_started_t* event);
+//void command_started(const mongoc_apm_command_started_t* event);
 
 class session_test {
    public:
-    session_test() : client{uri{}} {
-        auto client_t = static_cast<mongoc_client_t*>(client_t_from_client(client));
-        auto callbacks = mongoc_apm_callbacks_new();
-        mongoc_apm_set_command_started_cb(callbacks, command_started);
-        mongoc_client_set_apm_callbacks(client_t, callbacks, this);
-        mongoc_apm_callbacks_destroy(callbacks);
+    session_test() {
+
+        options::client client_opts;
+        options::apm apm_opts;
+
+        apm_opts.on_command_started([&](const mongocxx::events::command_started_event& event) {
+          std::cerr << "triggered" << std::endl;
+
+          // Ignore auth commands like "saslStart", and handshakes with "isMaster".
+            std::string sasl{"sasl"};
+            if (event.command_name().to_string().substr(0, sasl.size()) == sasl || event.command_name().to_string() == "isMaster" || event.command_name().to_string() == "drop") {
+                std::cerr << "good skip\n" << std::endl;
+                return;
+            }
+
+            std::cerr << bsoncxx::to_json(event.command()) << std::endl;
+
+            bsoncxx::document::value v(event.command());
+
+            events.emplace_back(started_event(event.command_name().to_string(), v));
+
+        });
+
+        client_opts.apm_opts(apm_opts);
+
+        mongocxx::client new_client{uri{}, client_opts};
+
+        client = std::move(new_client);
     }
 
     void test_method_with_session(const std::function<void(bool)>& f, const client_session& s) {
@@ -284,37 +307,19 @@ class session_test {
         }
     }
 
-    class apm_event {
-       public:
-        apm_event(const std::string& command_name_, const bsoncxx::document::value& document_)
-            : command_name(command_name_), value(document_), command(value.view()) {}
+  class started_event {
+   public:
+    started_event(const std::string& command_name_, const bsoncxx::document::value& command_)
+        : command_name(command_name_), value(command_), command(command_.view()) {}
 
-        std::string command_name;
-        bsoncxx::document::value value;
-        bsoncxx::document::view command;
-    };
+    std::string command_name;
+    bsoncxx::document::value value;
+    bsoncxx::document::view command;
+  };
 
-    std::vector<apm_event> events;
+    std::vector<started_event> events;
     mongocxx::client client;
 };
-
-void command_started(const mongoc_apm_command_started_t* event) {
-    using namespace bsoncxx::helpers;
-
-    std::string command_name{mongoc_apm_command_started_get_command_name(event)};
-
-    // Ignore auth commands like "saslStart", and handshakes with "isMaster".
-    std::string sasl{"sasl"};
-    if (command_name.substr(0, sasl.size()) == sasl || command_name == "isMaster") {
-        return;
-    }
-
-    auto& listener =
-        *(reinterpret_cast<session_test*>(mongoc_apm_command_started_get_context(event)));
-    auto document = value_from_bson_t(mongoc_apm_command_started_get_command(event));
-
-    listener.events.emplace_back(command_name, document);
-}
 
 TEST_CASE("lsid", "[session]") {
     instance::current();
@@ -386,8 +391,12 @@ TEST_CASE("lsid", "[session]") {
             REQUIRE(total == 4);
             use_session ? bucket.delete_file(s, one) : bucket.delete_file(one);
         };
+        try {
+            test.test_method_with_session(f, s);
 
-        test.test_method_with_session(f, s);
+        } catch (std::logic_error e ){
+            std::cerr << e.what() << std::endl;
+        }
     }
 
     SECTION("client::list_databases") {
